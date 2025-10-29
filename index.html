@@ -1,12 +1,1010 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Portfolio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul's Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0A192F;
+            color: #8892B0;
+            overflow-x: hidden;
+        }
+
+        /* Raining beams background animation */
+        .beam-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .beam {
+            position: absolute;
+            background: linear-gradient(to bottom, rgba(100, 255, 218, 0.08), rgba(100, 255, 218, 0));
+            animation: beam-rain linear infinite;
+        }
+        
+        @keyframes beam-rain {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 50;
+            background-color: rgba(10, 25, 47, 0); /* Making background transparent */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-link {
+            transition: color 0.3s, transform 0.3s;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #64FFDA;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Hero section animations */
+        #hero-content {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 1.5s forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Classy Staggered Word Animation */
+        .animated-word {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+            display: inline-block;
+        }
+
+        .animated-word.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typing and deleting animation */
+        #typed-text {
+            border-right: 3px solid #64FFDA;
+            animation: blink-caret .75s step-end infinite;
+        }
+
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+            from, to {
+                border-color: transparent
+            }
+            50% {
+                border-color: #64FFDA;
+            }
+        }
+
+        /* Timeline specific animations (NEW) */
+        .timeline-line {
+            width: 4px;
+            background-color: #233554;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding: 20px;
+            margin-bottom: 40px;
+            cursor: pointer;
+            transition: all 0.4s ease-in-out;
+            opacity: 0;
+        }
+
+        .timeline-item.in-view {
+            opacity: 1;
+        }
+        
+        .timeline-item.left {
+            transform: translateX(-50px);
+        }
+        
+        .timeline-item.right {
+            transform: translateX(50px);
+        }
+
+        .timeline-item.left.in-view {
+            transform: translateX(0);
+        }
+        
+        .timeline-item.right.in-view {
+            transform: translateX(0);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #64FFDA;
+            border: 3px solid #0A192F;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .timeline-item.left::after {
+            right: -8px;
+        }
+
+        .timeline-item.right::after {
+            left: -8px;
+        }
+
+        .timeline-content {
+            background: #112240;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #233554;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-color: #64FFDA;
+        }
+        
+        /* Project card animations */
+        .project-card {
+            background-color: #112240;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #233554;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease-in-out;
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        .project-card.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-color: #64FFDA;
+        }
+
+        /* Project button animation */
+        .visit-repo-btn {
+            background-color: #233554;
+            color: #64FFDA;
+            border: 1px solid #233554;
+            transition: all 0.3s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        .visit-repo-btn.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .visit-repo-btn:hover {
+            background-color: #64FFDA;
+            color: #0A192F;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+        }
+
+        /* Certifications section styling */
+        .cert-card-wrapper {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cert-card-wrapper.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cert-card {
+            background-color: #112240;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #233554;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cert-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-color: #64FFDA;
+        }
+        
+        /* New Credentials Button Styling */
+        .credentials-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #64FFDA;
+            color: #0A192F;
+            font-weight: 600;
+            border-radius: 9999px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .credentials-btn:hover {
+            background-color: #52DDA8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(100, 255, 218, 0.3);
+        }
+        
+        .credentials-btn:active {
+            transform: scale(0.95);
+            background-color: #3f7b6b;
+            box-shadow: none;
+        }
+
+        /* Skills Card */
+        .skills-card {
+            background-color: #112240;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #233554;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease-in-out;
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        .skills-card.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .skills-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-color: #64FFDA;
+        }
+        .skill-badge {
+            background-color: #233554;
+            color: #64FFDA;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Contact section animations */
+        .contact-btn {
+            background-color: #112240;
+            border: 1px solid #233554;
+            transition: all 0.3s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .contact-btn.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .contact-btn:hover {
+            background-color: #64FFDA;
+            color: #0A192F;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        .resume-btn {
+            background-color: #64FFDA;
+            transition: all 0.3s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .resume-btn.in-view {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .resume-btn:hover {
+            background-color: #64FFDA;
+            color: #0A192F;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #112240;
+            color: #e0e0e0;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: modal-enter 0.3s ease-out forwards;
+        }
+
+        @keyframes modal-enter {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #64FFDA;
+        }
+        
+        #generatedText {
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 20px;
+            }
+
+            .timeline-item.right {
+                margin-left: 50px;
+            }
+
+            .timeline-item.left {
+                margin-left: 50px;
+            }
+
+            .timeline-item::after {
+                left: 17px;
+                transform: translateY(-50%) translateX(0);
+            }
+            
+            .navbar-menu {
+                display: none;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+            .mobile-menu {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100">
+    <!-- Raining beams background animation -->
+    <div class="beam-bg"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar py-4 px-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-[#E6F1FF]">
+                Rahul
+            </a>
+            
+            <!-- Desktop Menu -->
+            <ul class="navbar-menu hidden md:flex space-x-8">
+                <li><a href="#timeline-section" class="nav-link text-[#8892B0] hover:text-[#64FFDA]">Timeline</a></li>
+                <li><a href="#projects-section" class="nav-link text-[#8892B0] hover:text-[#64FFDA]">Projects</a></li>
+                <li><a href="#certifications-section" class="nav-link text-[#8892B0] hover:text-[#64FFDA]">Certifications</a></li>
+                <li><a href="#skills-section" class="nav-link text-[#8892B0] hover:text-[#64FFDA]">Skills</a></li>
+                <li><a href="#resume-section" class="nav-link text-[#8892B0] hover:text-[#64FFDA]">Resume</a></li>
+                <li><a href="#contact-section" class="nav-link text-[#8892B0] hover:text-[#64FFDA]">Contact</a></li>
+            </ul>
+            
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-[#E6F1FF] focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <ul id="mobile-menu" class="mobile-menu absolute top-0 left-0 w-full h-screen bg-[#0A192F] items-center justify-center flex-col space-y-8 transform translate-x-full md:hidden transition-transform duration-300">
+            <li><a href="#timeline-section" class="text-2xl text-[#E6F1FF] hover:text-[#64FFDA] transition-colors nav-link">Timeline</a></li>
+            <li><a href="#projects-section" class="text-2xl text-[#E6F1FF] hover:text-[#64FFDA] transition-colors nav-link">Projects</a></li>
+            <li><a href="#certifications-section" class="text-2xl text-[#E6F1FF] hover:text-[#64FFDA] transition-colors nav-link">Certifications</a></li>
+            <li><a href="#skills-section" class="text-2xl text-[#E6F1FF] hover:text-[#64FFDA] transition-colors nav-link">Skills</a></li>
+            <li><a href="#resume-section" class="text-2xl text-[#E6F1FF] hover:text-[#64FFDA] transition-colors nav-link">Resume</a></li>
+            <li><a href="#contact-section" class="text-2xl text-[#E6F1FF] hover:text-[#64FFDA] transition-colors nav-link">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero Section with animations -->
+    <section class="min-h-screen flex items-center justify-center text-center px-4 pt-16">
+        <div id="hero-content" class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight" id="main-heading">
+                <span class="animated-word">Hello,</span>
+                <span class="animated-word">I'm</span>
+                <span class="animated-word text-[#64FFDA]">Rahul</span>
+                <span class="animated-word text-[#64FFDA]">Singh</span>
+                <span class="animated-word text-[#64FFDA]">Parihar</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl font-medium text-[#8892B0]">
+                <span id="typed-text"></span>
+            </p>
+            <p class="mt-8 text-lg md:text-xl text-[#8892B0] max-w-2xl mx-auto">
+                MCA student specializing in Software Development, AI/ML, and Web Applications. Passionate about solving real-world
+                problems with technology and eager to contribute through strong programming, analytical, and problem-solving skills.
+            </p>
+            <a href="#timeline-section" class="mt-8 inline-block px-8 py-3 rounded-full bg-[#64FFDA] text-[#0A192F] font-semibold text-lg hover:bg-[#52DDA8] transition-colors duration-300 transform hover:scale-105">
+                Explore My Journey
+            </a>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <main id="timeline-section" class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold text-center mb-12 text-[#E6F1FF]">My Timeline</h2>
+        <div class="relative max-w-4xl mx-auto">
+            <div class="timeline-line"></div>
+
+            <div class="flex flex-col md:flex-row items-center md:items-stretch">
+                <!-- DOB -->
+                <div class="w-full md:w-1/2 flex justify-center md:justify-end md:pr-12">
+                    <div class="timeline-item left text-right" data-details='{"date": "11-Feb-2002", "title": "Date of Birth", "description": "The start of my journey."}'>
+                        <div class="timeline-content">
+                            <h3 class="text-xl font-bold text-[#E6F1FF]">Date of Birth</h3>
+                            <p class="text-sm text-[#8892B0]">11-Feb-2002</p>
+                            <p class="mt-2 text-[#8892B0]">The beginning of my journey in this world.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 hidden md:block"></div>
+            </div>
+
+            <!-- 10th Grade -->
+            <div class="flex flex-col md:flex-row items-center md:items-stretch">
+                <div class="md:w-1/2 hidden md:block"></div>
+                <div class="w-full md:w-1/2 flex justify-center md:justify-start md:pl-12">
+                    <div class="timeline-item right text-left" data-details='{"date": "2020", "title": "10th Grade", "percentage": "90%", "subjects": "Science, Mathematics, Social Studies, English, Hindi"}'>
+                        <div class="timeline-content">
+                            <h3 class="text-xl font-bold text-[#E6F1FF]">10th Grade</h3>
+                            <p class="text-sm text-[#8892B0]">2020</p>
+                            <p class="mt-2 text-[#8892B0]">Successfully completed my 10th grade education.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 12th Grade -->
+            <div class="flex flex-col md:flex-row items-center md:items-stretch">
+                <div class="w-full md:w-1/2 flex justify-center md:justify-end md:pr-12">
+                    <div class="timeline-item left text-right" data-details='{"date": "2022", "title": "12th Grade", "percentage": "85%", "subjects": "Physics, Chemistry, Mathematics, English, Physical Education"}'>
+                        <div class="timeline-content">
+                            <h3 class="text-xl font-bold text-[#E6F1FF]">12th Grade</h3>
+                            <p class="text-sm text-[#8892B0]">2022</p>
+                            <p class="mt-2 text-[#8892B0]">Graduated from high school with a strong focus on science.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 hidden md:block"></div>
+            </div>
+
+            <!-- Graduation -->
+            <div class="flex flex-col md:flex-row items-center md:items-stretch">
+                <div class="md:w-1/2 hidden md:block"></div>
+                <div class="w-full md:w-1/2 flex justify-center md:justify-start md:pl-12">
+                    <div class="timeline-item right text-left" data-details='{"date": "2024", "title": "BA - Bachelor of Arts", "percentage": "74.5%", "subjects": "Arts & Social Sciences"}'>
+                        <div class="timeline-content">
+                            <h3 class="text-xl font-bold text-[#E6F1FF]">BA from SSJU</h3>
+                            <p class="text-sm text-[#8892B0]">2024</p>
+                            <p class="mt-2 text-[#8892B0]">Completed my undergraduate degree with a focus on arts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post-Graduation -->
+            <div class="flex flex-col md:flex-row items-center md:items-stretch">
+                <div class="w-full md:w-1/2 flex justify-center md:justify-end md:pr-12">
+                    <div class="timeline-item left text-right" data-details='{"date": "Current, 3rd Sem", "title": "MCA - Graphic Era Hill University", "percentage": "CGPA: 7.45", "subjects": "Software Development, AI/ML, Web Applications"}'>
+                        <div class="timeline-content">
+                            <h3 class="text-xl font-bold text-[#E6F1FF]">MCA (Current)</h3>
+                            <p class="text-sm text-[#8892B0]">Current, 3rd Sem</p>
+                            <p class="mt-2 text-[#8892B0]">Pursuing my Masters in Computer Applications.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 hidden md:block"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Projects Section -->
+    <section id="projects-section" class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold text-center mb-8 text-[#E6F1FF]">My Projects</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Project 1 -->
+            <div class="project-card">
+                <h3 class="text-2xl font-semibold text-[#E6F1FF] mb-2">AI-Powered Mental Health Check-in</h3>
+                <p class="text-sm text-[#8892B0] mb-4">Web-based journaling app with secure login and AI-based sentiment analysis.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">Flask</span>
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">React</span>
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">SQLite</span>
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">NLP</span>
+                </div>
+                <a href="https://github.com/rahul-0707/AI-Powered-Mental-Health-Check-in" target="_blank" class="visit-repo-btn flex items-center justify-center px-4 py-2 rounded-full mt-4 text-sm font-semibold">
+                    <i class="fab fa-github mr-2"></i> Visit Repo
+                </a>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card">
+                <h3 class="text-2xl font-semibold text-[#E6F1FF] mb-2">Railway Reservation System</h3>
+                <p class="text-sm text-[#8892B0] mb-4">A C-based application for train reservations, cancellations, and seat allocation.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">C</span>
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">DSA</span>
+                </div>
+                <a href="https://github.com/rahul-0707/Railway-Reservation-System" target="_blank" class="visit-repo-btn flex items-center justify-center px-4 py-2 rounded-full mt-4 text-sm font-semibold">
+                    <i class="fab fa-github mr-2"></i> Visit Repo
+                </a>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card">
+                <h3 class="text-2xl font-semibold text-[#E6F1FF] mb-2">Travel Agency Website</h3>
+                <p class="text-sm text-[#8892B0] mb-4">A responsive website with booking and information features.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">HTML</span>
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">CSS</span>
+                    <span class="px-3 py-1 bg-[#64FFDA] text-[#0A192F] text-xs font-semibold rounded-full">JavaScript</span>
+                </div>
+                <a href="https://github.com/rahul-0707/Travel-Agency-Website" target="_blank" class="visit-repo-btn flex items-center justify-center px-4 py-2 rounded-full mt-4 text-sm font-semibold">
+                    <i class="fab fa-github mr-2"></i> Visit Repo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications-section" class="container mx-auto px-4 py-12 text-center">
+        <h2 class="text-3xl font-bold text-center mb-12 text-[#E6F1FF]">Certifications</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 certs-container">
+            <!-- Certification 1 -->
+            <div class="cert-card-wrapper">
+                <div class="cert-card">
+                    <img src="https://placehold.co/96x96/64FFDA/000000?text=SWAYAM" alt="SWAYAM Certification" class="w-24 h-24 mb-4 mx-auto rounded-xl">
+                    <h3 class="text-xl font-semibold text-[#E6F1FF]">Research Methodology</h3>
+                    <p class="text-sm text-[#8892B0] mt-2">(SWAYAM)</p>
+                    <p class="text-base text-[#E6F1FF] font-semibold mb-2 mt-4">Details:</p>
+                    <p class="text-sm text-[#8892B0]">Completed a comprehensive course on research methods and techniques.</p>
+                    <a href="#" target="_blank" class="credentials-btn">
+                        View Credential
+                    </a>
+                </div>
+            </div>
+    
+            <!-- Certification 2 -->
+            <div class="cert-card-wrapper" style="animation-delay: 0.2s;">
+                <div class="cert-card">
+                    <img src="https://placehold.co/96x96/64FFDA/000000?text=Deloitte" alt="Deloitte Certification" class="w-24 h-24 mb-4 mx-auto rounded-xl">
+                    <h3 class="text-xl font-semibold text-[#E6F1FF]">Deloitte Cyber Job Simulation</h3>
+                    <p class="text-sm text-[#8892B0] mt-2">Deloitte</p>
+                    <p class="text-base text-[#E6F1FF] font-semibold mb-2 mt-4">Details:</p>
+                    <p class="text-sm text-[#8892B0]">Gained practical insights into cyber security through a job simulation.</p>
+                    <a href="#" target="_blank" class="credentials-btn">
+                        View Credential
+                    </a>
+                </div>
+            </div>
+    
+            <!-- Certification 3 -->
+            <div class="cert-card-wrapper" style="animation-delay: 0.4s;">
+                <div class="cert-card">
+                    <img src="https://placehold.co/96x96/64FFDA/000000?text=HP" alt="HP Certification" class="w-24 h-24 mb-4 mx-auto rounded-xl">
+                    <h3 class="text-xl font-semibold text-[#E6F1FF]">Agile Project Management</h3>
+                    <p class="text-sm text-[#8892B0] mt-2">(HP)</p>
+                    <p class="text-base text-[#E6F1FF] font-semibold mb-2 mt-4">Details:</p>
+                    <p class="text-sm text-[#8892B0]">Certified in Agile methodologies for effective project management.</p>
+                    <a href="#" target="_blank" class="credentials-btn">
+                        View Credential
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Skills Section -->
+    <section id="skills-section" class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold text-center mb-8 text-[#E6F1FF]">Technical Skills</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Languages Card -->
+            <div class="skills-card">
+                <h3 class="text-xl font-semibold text-[#E6F1FF] mb-4">Languages</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-badge">C</span>
+                    <span class="skill-badge">Java</span>
+                    <span class="skill-badge">Python</span>
+                    <span class="skill-badge">JavaScript</span>
+                </div>
+            </div>
+            <!-- Web Card -->
+            <div class="skills-card">
+                <h3 class="text-xl font-semibold text-[#E6F1FF] mb-4">Web</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-badge">HTML</span>
+                    <span class="skill-badge">CSS</span>
+                    <span class="skill-badge">React (basic)</span>
+                    <span class="skill-badge">Flask</span>
+                </div>
+            </div>
+            <!-- DBMS Card -->
+            <div class="skills-card">
+                <h3 class="text-xl font-semibold text-[#E6F1FF] mb-4">DBMS</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-badge">SQL</span>
+                    <span class="skill-badge">SQLite</span>
+                </div>
+            </div>
+            <!-- Tools Card -->
+            <div class="skills-card">
+                <h3 class="text-xl font-semibold text-[#E6F1FF] mb-4">Tools</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-badge">Git</span>
+                    <span class="skill-badge">Cursor IDE</span>
+                </div>
+            </div>
+            <!-- Core Concepts Card -->
+            <div class="skills-card">
+                <h3 class="text-xl font-semibold text-[#E6F1FF] mb-4">Core</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-badge">DSA</span>
+                    <span class="skill-badge">Web Dev</span>
+                    <span class="skill-badge">AI/ML</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Resume Section -->
+    <section id="resume-section" class="container mx-auto px-4 py-12 text-center">
+        <h2 class="text-3xl font-bold text-center mb-8 text-[#E6F1FF]">My Resume</h2>
+        <a href="Rahul_Singh_Parihar_Resume_OnePage.pdf" target="_blank" class="resume-btn inline-block px-8 py-4 rounded-full text-[#0A192F] font-semibold text-lg hover:text-[#E6F1FF] transition-colors duration-300 transform hover:scale-105">
+            <i class="fas fa-download mr-2"></i> View Resume
+        </a>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact-section" class="container mx-auto px-4 py-12 text-center">
+        <h2 class="text-3xl font-bold text-center mb-8 text-[#E6F1FF]">Connect With Me</h2>
+        <div class="flex justify-center flex-wrap gap-6">
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/rahul-singh-parihar-1b12aa2b7" target="_blank" class="contact-btn flex items-center justify-center p-4 rounded-full text-[#8892B0] hover:text-[#0A192F]">
+                <i class="fab fa-linkedin-in text-2xl"></i>
+            </a>
+
+            <!-- GitHub -->
+            <a href="https://github.com/rahul-0707" target="_blank" class="contact-btn flex items-center justify-center p-4 rounded-full text-[#8892B0] hover:text-[#0A192F]">
+                <i class="fab fa-github text-2xl"></i>
+            </a>
+
+            <!-- Email -->
+            <a href="mailto:ronaldorahul49@gmail.com" class="contact-btn flex items-center justify-center p-4 rounded-full text-[#8892B0] hover:text-[#0A192F]">
+                <i class="fas fa-envelope text-2xl"></i>
+            </a>
+
+            <!-- Instagram (placeholder, aap link update kar sakte hain) -->
+            <a href="#" target="_blank" class="contact-btn flex items-center justify-center p-4 rounded-full text-[#8892B0] hover:text-[#0A192F]">
+                <i class="fab fa-instagram text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- The Modal -->
+    <div id="timelineModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-title" class="text-2xl font-bold mb-4 text-[#E6F1FF]"> 0</h3>
+            <p id="modal-date" class="text-lg text-[#8892B0] mb-4"></p>
+            <div id="modal-details" class="text-base text-[#8892B0]"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Smooth scroll to timeline section
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Staggered word animation for hero heading
+            const mainHeading = document.getElementById('main-heading');
+            const animatedWords = mainHeading.querySelectorAll('.animated-word');
+            
+            animatedWords.forEach((word, index) => {
+                word.style.transitionDelay = `${index * 0.2}s`;
+            });
+
+            const heroObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animatedWords.forEach(word => {
+                            word.classList.add('in-view');
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            heroObserver.observe(mainHeading);
+
+            // Multi-word Typing Animation
+            const typedTextElement = document.getElementById('typed-text');
+            const phrases = ["A Web Developer", "AI/ML Enthusiast", "A Software Developer"];
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function typeWriterEffect() {
+                const currentPhrase = phrases[phraseIndex];
+                const displayedText = isDeleting
+                    ? currentPhrase.substring(0, charIndex--)
+                    : currentPhrase.substring(0, charIndex++);
+
+                typedTextElement.textContent = displayedText;
+
+                const typingSpeed = 100;
+                const deletingSpeed = 50;
+                let delay = isDeleting ? deletingSpeed : typingSpeed;
+
+                if (!isDeleting && charIndex > currentPhrase.length) {
+                    delay = 1500; // Pause at the end
+                    isDeleting = true;
+                } else if (isDeleting && charIndex < 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    delay = 500; // Pause before typing next phrase
+                }
+                
+                setTimeout(typeWriterEffect, delay);
+            }
+
+            typeWriterEffect();
+        });
+
+        // Intersection Observer for fade-in animation
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const projectCards = document.querySelectorAll('.project-card');
+        const skillsCards = document.querySelectorAll('.skills-card');
+        const contactBtns = document.querySelectorAll('.contact-btn');
+        const resumeBtn = document.querySelector('.resume-btn');
+        const projectBtns = document.querySelectorAll('.visit-repo-btn');
+        const certCards = document.querySelectorAll('.cert-card-wrapper');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        timelineItems.forEach(item => {
+            observer.observe(item);
+        });
+
+        projectCards.forEach(card => {
+            observer.observe(card);
+        });
+        
+        projectBtns.forEach(btn => {
+            observer.observe(btn);
+        });
+
+        skillsCards.forEach(card => {
+            observer.observe(card);
+        });
+        
+        certCards.forEach(card => {
+            observer.observe(card);
+        });
+
+        if (resumeBtn) {
+            observer.observe(resumeBtn);
+        }
+
+        contactBtns.forEach(btn => {
+            observer.observe(btn);
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('timelineModal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDate = document.getElementById('modal-date');
+        const modalDetails = document.getElementById('modal-details');
+        const closeButton = document.querySelector('.close-button');
+
+        timelineItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const details = JSON.parse(item.getAttribute('data-details'));
+                modalTitle.textContent = details.title;
+                modalDate.textContent = details.date;
+                
+                let detailsHtml = '';
+                if (details.percentage) {
+                    detailsHtml += `<p class="mb-2"><strong>Percentage/CGPA:</strong> ${details.percentage}</p>`;
+                }
+                if (details.subjects) {
+                    detailsHtml += `<p><strong>Subjects:</strong> ${details.subjects}</p>`;
+                }
+                if (details.description) {
+                    detailsHtml += `<p>${details.description}</p>`;
+                }
+
+                modalDetails.innerHTML = detailsHtml;
+                modal.style.display = 'flex';
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+            });
+        });
+
+        // Raining beams generation
+        const beamContainer = document.querySelector('.beam-bg');
+        const numBeams = 50;
+        
+        function createBeam() {
+            const beam = document.createElement('div');
+            const width = Math.random() * 2 + 1; // 1px to 3px
+            const height = Math.random() * 20 + 20; // 20vh to 40vh
+            const left = Math.random() * 100; // 0% to 100%
+            const duration = Math.random() * 5 + 3; // 3s to 8s
+            const delay = Math.random() * 5; // 0s to 5s
+            
+            beam.className = 'beam';
+            beam.style.width = `${width}px`;
+            beam.style.height = `${height}vh`;
+            beam.style.left = `${left}vw`;
+            beam.style.animationDuration = `${duration}s`;
+            beam.style.animationDelay = `${delay}s`;
+            
+            beamContainer.appendChild(beam);
+        }
+
+        // Create beams on load
+        for (let i = 0; i < numBeams; i++) {
+            createBeam();
+        }
+    </script>
+</body>
+
 </html>
